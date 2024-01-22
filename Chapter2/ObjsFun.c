@@ -154,6 +154,67 @@ If you inclkude the header <stdbool.h>, you can also spell this type as bool and
     _Bool flag1= 0; 
     bool flag2 = false;
 
+
+Character Types:
+---------------
+The C language defines three character types: char, signed char, and unsigned char. Each compiler
+implementation will define char to have the same alignment size, range, representation, and behavior as either signed char or
+unsigned char. Regardless of the choice made, char is a separate type from the other two and is incompatible with both.
+
+The char type is commonly used to represent character data in C language programs. In particular, objects of type char must able to represent 
+the minimum set of characters required in the execution environment (known as the BASIC EXECUTION CHARACTER SET), including upper-and lowercase letters, the 10 decimal digit, 
+the space character, and various punctuation and control characters. The char type is inappropriate for integer data; 
+it is safer to use signed char to represent small signed integer values, and unsigned char to represent small unsigned values. 
+
+You can represent the characters of a larger character set as WIDE CHARACTERS by using 'wchar_t 'type, which generally takes more space
+space than a basic character. Typically, implementations choose 16 or 32 bits to represent a wide character.
+
+Numerical Types:
+-----------------
+C provides several numerical types that can be used to represent integers, enumerators, and floating-point values. 
+
+Integer Values:
+--------------
+Signed intetger types can be used to represent negative numbers, positive numers, and zero. The signed integer types include signed char, short int, int long, 
+and long long int.The signed integer types include signed char, short int, int, long int, and long long int. 
+Except for int itself, the keyword int may be omitted in the delarations for these types, so you might, for example, declare a type by using long long instead of
+long long int. 
+
+For each signed int type, there is a corresponding unsigned int type that uses the same amount of storage: unsigned char, unsigned short in, unsigned int, unsigned long int, and unsigned long long int. 
+The unsigned type can be used to represent only positive numbers and zero. 
+
+The signed and unsigned int types are used to represent ints of various sizes. Each platform (current or historical) determines the size for each of these types, 
+given some constraints. Each type has a minimum representable rrange. The types are ordered by width, guaranteeing that wider types are at least as large as narrower types
+so that an object of type long long int can represent all values that an object of type long int can represent and so forth. 
+The actual size of the various int types can be inferred from the minimum and maximum representable values for the various int types specified in the <limits.h> header file. 
+
+The int type usually has the natural size suggested by the architecture of the execution environment, so the size would be 16 bits wide on a 16-bit arcchitecture, and 32 bits wide on a 32-bit
+architecture. You can specify actual-width integers by using type defs from the <stdint.h> or <inttypes.h> headers, like uint32_t. These headers also provide type defintions for the widest 
+available int types: uintmax_t and intmax_t, 
+
+enum Types:
+------------
+An enumeration, or enum, allows you to define a type that assigns names (enumerators) to integer values in cases with an enumerable set of constant values. 
+    enum day { sun, mon, tue, wed, thu, fir, sat}; 
+    enum cardinal_points {north = 0, east = 90, south = 180, west = 270}; 
+    enum months {jan = 1, feb. march. apr, may, jun, jul };
+
+If you don't specify a value to the first enumerator eith the = operator, the value of its enumeration contant is 0, and each subsequent constant. Consequently, the value of sun in the day enumeration is 0, mon is 1, and so forth. 
+You can also assign specfic values to each enumerator, as shown by the cardinal_points enumeration. 
+
+The actual value of the enumeration constand must be representable as an int, but its type is implementation defined. 
+
+void Types:
+-----------
+The void tpe is a rather strange type. The keyword void (by itself) means "cannot hold any value". 
+The derived type void * means that the pointer can reference any object.
+
+FUnciton Types:
+---------------
+Function types are derived types. In this case, the type is derived from the return type and the number and types of its params. The reutnr type of a function 
+can't be an array type
+
+When you declare a function, you use the function declarator to specify the name of the function and the return type. 
 */
 #include <stdio.h>
 
