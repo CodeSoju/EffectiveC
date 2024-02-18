@@ -215,6 +215,234 @@ Function types are derived types. In this case, the type is derived from the ret
 can't be an array type
 
 When you declare a function, you use the function declarator to specify the name of the function and the return type. 
+
+Examples offunction type declarations:
+   int f(void);
+   int *fip(); 
+   void g(int i, int j);
+   void h(int, int); 
+
+Specifying parameters with identifiers (as done her with g) can be problematic if an identifier is a macro. However, providing parameter
+names is good practice for self-documenting code, so omitting the identifiers (as done in h) is not typically recommended. 
+
+In a function declaration, specfying params is optional. However, failing to do so is occasionally problematic. If you were to write the function declaration for fip in C++
+it would declare a function accepting no argument and returning an int*. In C, fip declares a function accpeting any number of args of any type and returning an int*.
+
+                    You should never declare funcs w/ an empty parameter list in C!!!!!!!
+So explicitly list params types and use void when there are no params. 
+
+A function type with a parameter type list is known as a function prototype. 
+A functino prototype informs the compiler about the number and types of params a function accepts. Compiler use this information to 
+verify that the correct number and type of params are used in the functino definition and any calls to the function. 
+
+The function definition provides the actual implementation of the function. 
+
+    int max(int a, int b) {
+        return a > b ? a : b;
+    }
+
+
+DERIVED TYPES:
+---------------
+These are types that are constructed from other types. These include pointers, arrays, type defintions, structures, and 
+unions. 
+
+Pointer Types:
+---------------
+A pointer type is derived from the function or object type that it points to, called the referenced type. A pointer provides a reference to an entity of the referenced type. 
+    int *ip;  // pointer to int
+    char *cp; // pointer to char
+    void *vp; // pointer to void
+
+& op (address-of) and indirection (*) op. You use the & op to take the address of an object or function.
+    int i = 17; 
+    int *ip = &i; 
+ We declare the var ip as a pointer to int and assign it the address of i. You can also use the & operator on the result
+ of the * op:
+    ip = &*ip; 
+
+Dereferencing ip by using the indirection operator resolves to the actual object i. Taking the address of *ip by using the & op 
+retrieves the pointer, so these two ops cancel each other out. 
+
+Arrays:
+------
+An array is a contiguously allocated sequence of objects that all have the same element type. 
+    int ia[11]; 
+    float *afp[17];
+
+Creates the string "0123456789" to demonstrate how to assign values to the elements of an array:
+char str[11]; 
+for(unsigned int i = 0; i < 10; ++i) {
+    str[i] = '0' + i;
+} 
+str[10] = '\0';  //null character
+
+
+    void func(int arr[5]); 
+    int main(void) {
+        unsigned int i = 0; 
+        unsigned int j = 0; 
+        int arr[3][5]; 
+        func(arr[i]); 
+        int x = arr[i][j]; 
+        return 0; 
+    }
+
+Type Definitions:
+-----------------
+You use typedef to declare an alias for an existing type; it creates a new type. For example, each of the 
+following declarations creates a new type alias:
+
+typedef unsigned int uint_type; 
+typedef signed char schar_type, *schar_p, (*fp)(void); 
+
+
+STRUCTURES:
+------------
+A structure type (struct) contains sequentially allocated member objects. Each object has its own name and may have a distinct type -
+unlike arrays, which must all be of the same type. 
+
+    struct sigrecord { 
+        int signum; 
+        char signame[20]; 
+        char sigdesc[100]; 
+    } sigline, *sigline_p;
+
+The structure has 3 members objects: signum is an object of type int, signmae is an array of typ.....
+Strcutures are sueful for declaring collections of related objects and may be used to represent things such as a 
+date, customer, or personel record. They are especially useful for grouping objects that are frequently passed together as args to a function, 
+so you don't need to repeatedly pass individual objects separately. 
+
+You reference members of an object of the structure type by using the structure member (.) operator. If you have a pointer to a structure, you can reference
+its members with the structure pointer(->) operator
+
+    sigline.signum = 5; 
+    strcpy(sigline.signame, "SIGINT"); 
+    strcpy(sigline.sigdesc, "Interrup from keyboard"); 
+
+     sigline_p = &sigline;
+     sigline_p->signum = 5; 
+     strcpy(sigline_p->signame, "Sigint"); 
+     strcpy(signline->sigdesc, "Interrupt from keyboard"); 
+
+
+UNIONS:
+-------
+Union types are similar to structures, except that the memory used by the member objects overlaps. Unions can contain
+an object of one type at one time, and an object of a different type at a different time, but never both objects at the same time, 
+and are primarily used to save memory. 
+
+union {
+    struct {
+        int type; 
+    }n;
+    struct {
+        int type; 
+        int intnode; 
+    }ni; 
+    struct {
+        int type;
+        double doublenode; 
+    }nf;
+}u;
+u.nf.type = 1;
+u.nf.doublenode = 3.14; 
+
+TAGS:
+----
+Tags are special naming mechanism for structs, unions and enumerations. For example, the identifier s appearing in the following structure is a tag:
+struct s {
+ -//--- snip=----
+};
+
+By itself, a tag is not a type name and cannot be used to declare a variable . Instead, you must declare variables of this type as follows:
+    struct s v;    //instance of struct s
+    struct s *p;  // pointer to struct s
+
+The names of unions and enumerations are also tags and not types, meaning that they cannot be used alone to declare a variable. 
+
+    enum day {sun, mon, tue, wed, thu, fri, sat}; 
+    day today; // error
+    enum day tomorrow; // OK
+
+The tags of structures, unions, and enumeration are defined in a separate namesapce from ordinary identifiers
+    enum status {ok, fail}; // enumeration
+    enum status status(void); //function
+
+You can even decalre an object s of type struct s:
+    struct s s;  //Not good practice, but valid in C
+
+You can think of struct tags as type names and define an alias fro the tag by using typedef. Here's an example:
+    typedef struct s{ int x; } t;
+
+    typedef struct tnode {
+        int count; 
+        struct tnode *left; 
+        struct tnode *right; 
+    }tnode; 
+
+Type Qualifers:
+-------------
+All the types examined so far have been unqualified types. Types can be qualified by using one or more of the following
+qualifiers: const, volatile, and restrict. Each of the qualifiers changes behaviors when accessing objects of the qualified type.
+
+    const
+        Objects declared with the 'const' qualifier (const-qualified types) are not modifiable. In particular, they're not assignable but 
+        can have constant intializers. This means objects with const-qualified types can be placed in read-only memory by the compiler, and any attempt to write to them 
+        willl result in a runtime error:
+            const int i = 1;  //const-qualified int
+            i = 2;  //error: i is const-qualified
+        It's possible to accidently convince your compiler to change a const-qualified object for you. In the following eaxmple, we take the 
+        address of a const-qualified object i and tell the cimpiler that this is actually a pointer to an int:
+            const int i =1; //object of const-qualified type
+            int *ip = (int *)&i; 
+            *ip = 2; //undefined behavior 
+C does not allow you to cast away the const if the original was declared as a const-qualified object. This code might appear to work, 
+but it's defctive and may fail later. For example, the compiler might place the const-qualified object in read-only memory, causing a memory fault when trying to store a value in 
+the object at runtime. 
+
+C allows you to modify an object that is pointed to by a const-qualified pointer by casting the const away, provided that the original object was not declared
+const:
+    int i = 12;
+    const int j = 12; 
+    const int *ip = &i; 
+    const int *jp = &j;
+    *(int *)ip = 42;  // ok 
+    *(int *)jp = 42;  //undefined behavior
+
+volatile
+---------
+objects of volatile-qualified types serve a special purpose. Static volatile-quialified objects are used to model memory-mapped I/O  ports, and static 
+constant volatile-qualified objects model memory-mapped input ports such as a real-time clock. 
+
+   The values stored in these objects may change w/o the knowledge of the compiler. For example, every time the value from the real-time clock is read, 
+it may change, even if the value has not been written to by the C program. 
+Using a volatile-qualified type lets the compiler know that the value may change, and ensures that every access to the real-time clock occurs (otherwise, an access to the real-time clock
+may be optimized away or replaced by a previously read and cached value). In the following code, for example, the compiler must generate instructions to read the value from port
+and then writes this value back to the port. 
+
+    volatile int port; 
+    port = port;
+
+Without the volatile qualification, the compiler would see this as a no-op ( a programming statement that does nothing) and potentially eliminate both the read and the write. 
+Also , volatile qualified types are used for communication with signal handlers and with setjmp/longjmp. 
+
+restrict:
+---------
+A restrict-qualified pointer is used to promote optimization. Objects indirectly accessed through a pointer frequently cannot be fully optimzied because of potential aliasing, which occurs when more than one pointer refers to the same object. 
+Aliasing can inhibit optimizations, bc the compiler can't tell if portions of an object can change values when another apparently  unrelated object is modified. 
+The following function copies n bytes from the storage referenced by q to the storage referrenced by p. The function parameters p and q are both restrict-qualified pointers:
+    void f(unsigned int n, int * restrict p, int * restrict q) {
+        while(n-- > 0) {
+            *p++ = *q++; 
+        }
+    } 
+
+Because both p and q are restrict-qualified pointers, the compiler  can assume that an object accessed through one of the pointer parameters is not also accessed through the other. 
+The compiler can make this assessment based solely on the parameter declarations w/o analyzing  the function body. 
+Although using restrict-qualified pointers can result in more efficient code, you must ensure that the pointers do not refer to overlapping memory to prevent undefined behavior. 
+
+
 */
 #include <stdio.h>
 
@@ -232,16 +460,36 @@ void swap_ptrs(int *pa, int *pb) {
     return; 
 }
 
+unsigned int retrieve(int counter) {
+    printf("inside the retrieve function\n");
+    return counter; 
+}
 // Demonstrating the storage class specifier static keyword
 void increment(void) {
     static unsigned int counter = 0; 
     counter++;
-    printf("%d", counter); 
+    printf("%d", retrieve(counter)); 
+    //printf("%d", counter); 
 }
+int add(int a, int b) {
+    return a + b; 
+}
+
+int subtract( int a, int b) {
+    return a - b; 
+}
+
+int multiply(int a, int b) {
+    return a * b;
+}
+
+int (*funct_ptr[3])() = {add, subtract, multiply};
 
 int main(void) { 
     int a = 21;     // a: 21
     int b = 17;        //b: 17
+    int result; 
+    int option;  
 
     /*swap(a, b); 
     printf(" Swap:\n\tmain: a = %d, b = %d\n", a, b);
@@ -249,9 +497,27 @@ int main(void) {
     printf(" Swap With Pointers:\n\tmain: a = %d, b = %d\n", a, b);
     */
 
-   for(int i = 0; i < 5; i++) {
+   printf("\nEnter fuction number you want");
+   printf("\nYou should not enter other than 0, 1, 2\n"); 
+   scanf("%d", &option);
+
+   if((option >= 0) && (option <= 2)) {
+    result = (*funct_ptr[option])(a, b);
+    printf("Result: %d\n", result);
+   }
+
+   /*for(int i = 0; i < 5; i++) {
     increment(); 
     printf("\n");
-   }
+   } */
     return 0;
 }
+
+/* 
+Exercises:
+    1. Add a retrieve function to the counting example from Listing 2-6 to retrieve the current value of counter
+
+    2. DEclare an array of three pointers to functions and invoke the appropriate 
+    function based on an index value passed in as an argument. 
+
+*/
